@@ -3,105 +3,131 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ultimate Cinematic Memory</title>
+<title>Memory</title>
 
 <style>
-body {
-    background: radial-gradient(circle at center, #120c08, #000000);
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    overflow: hidden;
-    font-family: 'Georgia', serif;
-    padding: 10px;
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  background:#000;
+  overflow:hidden;
+  font-family:Arial;
 }
 
-/* Sparkles */
-.sparkle {
-    position: fixed;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: white;
-    box-shadow: 0 0 10px white, 0 0 20px gold;
-    animation: sparkleAnim 2s infinite;
+.recorder-box{
+  width:90vw;
+  max-width:260px;
+  aspect-ratio:5/7;
+  overflow:hidden;
+  position:relative;
+  border-radius:15px;
 }
 
-@keyframes sparkleAnim {
-    0%,100% { opacity: 0.2; transform: scale(0.5); }
-    50% { opacity: 1; transform: scale(1.5); }
+.photo-card{
+  position:absolute;
+  width:100%;
+  height:100%;
+  bottom:-100%;
+  left:0;
+  transition:all 1.2s ease-in-out;
 }
 
-/* Glow */
-.glow {
-    position: fixed;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,200,100,0.08), transparent 60%);
-    animation: moveGlow 10s linear infinite;
+.photo-card img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
-@keyframes moveGlow {
-    0% { transform: translate(-30%, -30%); }
-    50% { transform: translate(-10%, -10%); }
-    100% { transform: translate(-30%, -30%); }
+.blur{filter:blur(8px);}
+.clear{filter:blur(0);}
+
+.play-button{
+  width:70px;
+  height:70px;
+  margin-top:20px;
+  cursor:pointer;
 }
 
-/* Photo box 5:7 */
-.recorder-box {
-    width: 90vw;
-    max-width: 260px;
-    aspect-ratio: 5/7; /* responsive ratio */
-    overflow: hidden;
-    border-radius: 20px;
-    position: relative;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+.click-text{
+  color:#fff;
+  margin-top:10px;
 }
+</style>
+</head>
 
-.photo-card {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    bottom: -100%;
-    transition: all 1.2s ease-in-out;
-}
+<body>
 
-.photo-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* keeps ratio nicely */
-    transition: transform 1s ease;
-}
+<div class="recorder-box">
+  <div class="photo-card blur"><img src="photo1.jpg"></div>
+  <div class="photo-card blur"><img src="photo2.jpg"></div>
+  <div class="photo-card blur"><img src="photo3.jpg"></div>
+</div>
 
-.blur { filter: blur(8px); }
-.clear { filter: blur(0); }
+<svg class="play-button" id="playBtn" viewBox="0 0 64 64">
+  <circle cx="32" cy="32" r="30" fill="red"/>
+  <polygon points="26,20 26,44 46,32" fill="white"/>
+</svg>
 
-/* Button */
-.play-button {
-    width: 70px;
-    height: 70px;
-    margin-top: 30px;
-    cursor: pointer;
-    animation: pulse 1.5s infinite;
-}
+<p class="click-text">I have a Surprise ❤️</p>
 
-@media (max-width: 480px) {
-    .play-button {
-        width: 60px;
-        height: 60px;
+<audio id="bgMusic" src="music.mp3"></audio>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+  const playBtn = document.getElementById("playBtn");
+  const music = document.getElementById("bgMusic");
+  const photos = document.querySelectorAll(".photo-card");
+
+  let index = 0;
+  let started = false;
+
+  playBtn.addEventListener("click", function(){
+    if(started) return;
+    started = true;
+
+    music.currentTime = 0;
+    music.play();
+
+    runReel();
+  });
+
+  function runReel(){
+    const current = photos[index];
+    const prev = photos[(index - 1 + photos.length) % photos.length];
+
+    if(prev){
+      prev.classList.remove("clear");
+      prev.classList.add("blur");
+      prev.style.transform = "translateY(-120%)";
     }
-}
 
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-}
+    current.style.transition = "none";
+    current.style.transform = "translateY(100%)";
 
-.click-text {
+    setTimeout(function(){
+      current.style.transition = "all 1.2s ease-in-out";
+      current.style.transform = "translateY(-100%)";
+      current.classList.remove("blur");
+      current.classList.add("clear");
+    }, 50);
+
+    index = (index + 1) % photos.length;
+
+    setTimeout(runReel, 3200);
+  }
+
+});
+
+</script>
+
+</body>
+</html>.click-text {
     color: #fff;
     margin-top: 10px;
     font-size: 16px;
