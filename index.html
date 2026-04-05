@@ -3,100 +3,91 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cinematic Memory</title>
+<title>Special Memory</title>
 
 <style>
 body {
-    background: radial-gradient(circle at center, #120c08, #000000);
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    min-height: 100vh;
+    background: radial-gradient(circle,#120c08,#000);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    height:100vh;
+    overflow:hidden;
 }
 
-/* ✨ Sparkles */
-.sparkle {
-    position: fixed;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: white;
-    box-shadow: 0 0 10px white, 0 0 20px gold;
-    animation: sparkleAnim 2s infinite;
+/* Sparkle */
+.sparkle{
+    position:fixed;
+    width:4px;height:4px;
+    background:white;
+    border-radius:50%;
+    animation:blink 2s infinite;
 }
-@keyframes sparkleAnim {
-    0%,100% { opacity: 0.2; }
-    50% { opacity: 1; }
+@keyframes blink{
+    0%,100%{opacity:.2}
+    50%{opacity:1}
 }
 
-/* 🔥 Glow */
-.glow {
-    position: fixed;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,200,100,0.08), transparent 60%);
+/* Glow */
+.glow{
+    position:fixed;
+    width:200%;height:200%;
+    background:radial-gradient(circle,rgba(255,200,100,.08),transparent);
 }
 
-/* 📸 Photo box */
-.recorder-box {
-    width: 90vw;
-    max-width: 260px;
-    aspect-ratio: 5/7;
-    overflow: hidden;
-    border-radius: 20px;
-    position: relative;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-    border: 2px solid rgba(255,255,255,0.1);
+/* Box */
+.box{
+    width:260px;
+    aspect-ratio:5/7;
+    overflow:hidden;
+    position:relative;
+    border-radius:20px;
 }
 
 /* Photos */
-.photo-card {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 100%;
+.photo{
+    position:absolute;
+    width:100%;
+    height:100%;
+    top:100%;
 }
 
-/* ▶ Button */
-.play-button {
-    margin-top: 30px;
-    width: 70px;
-    height: 70px;
-    cursor: pointer;
+/* Button */
+.play{
+    margin-top:20px;
+    cursor:pointer;
 }
 
 /* Text */
-.play-text {
-    color: white;
-    margin-top: 10px;
-    font-size: 16px;
+.text{
+    color:#fff;
+    margin-top:10px;
 }
 
-/* 🌑 Fade */
-.fade-black {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: black;
-    opacity: 0;
-    transition: opacity 2s;
+/* Fade */
+.fade{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:black;
+    opacity:0;
+    transition:2s;
 }
 
-/* ❤️ Thank You */
-.thankyou {
-    position: fixed;
-    color: white;
-    font-size: 32px;
-    opacity: 0;
-    transform: scale(0.5);
-    transition: all 1s ease;
+/* Thank */
+.thank{
+    position:fixed;
+    color:#fff;
+    font-size:30px;
+    opacity:0;
+    transform:scale(.5);
+    transition:1s;
 }
-.show {
-    opacity: 1;
-    transform: scale(1);
+.show{
+    opacity:1;
+    transform:scale(1);
 }
 </style>
 </head>
@@ -105,120 +96,115 @@ body {
 
 <div class="glow"></div>
 
-<div class="recorder-box">
-    <div class="photo-card"><img src="photo1.jpg" width="100%" height="100%"></div>
-    <div class="photo-card"><img src="photo2.jpg" width="100%" height="100%"></div>
-    <div class="photo-card"><img src="photo3.jpg" width="100%" height="100%"></div>
+<div class="box">
+    <div class="photo"><img src="photo1.jpg" width="100%" height="100%"></div>
+    <div class="photo"><img src="photo2.jpg" width="100%" height="100%"></div>
+    <div class="photo"><img src="photo3.jpg" width="100%" height="100%"></div>
 </div>
 
-<svg class="play-button" id="playBtn" viewBox="0 0 64 64">
-    <circle cx="32" cy="32" r="30" fill="red"/>
-    <polygon points="26,20 26,44 46,32" fill="white"/>
+<svg class="play" id="btn" width="70" height="70" viewBox="0 0 64 64">
+<circle cx="32" cy="32" r="30" fill="red"/>
+<polygon points="26,20 26,44 46,32" fill="white"/>
 </svg>
 
-<p class="play-text">I have Surprise 🫠</p>
+<div class="text">I have Surprise 🫠</div>
 
-<div class="fade-black" id="fadeBlack"></div>
-<div class="thankyou" id="thankText">Thank You ❤️</div>
+<div class="fade" id="fade"></div>
+<div class="thank" id="thank">Thank You ❤️</div>
 
-<audio id="bgMusic" src="music.mp3"></audio>
+<audio id="music" src="music.mp3"></audio>
 
 <script>
 
-// ✨ Sparkles
+// sparkles
 for(let i=0;i<40;i++){
-    let s=document.createElement('div');
-    s.className='sparkle';
-    s.style.top=Math.random()*100+'vh';
-    s.style.left=Math.random()*100+'vw';
-    document.body.appendChild(s);
+ let s=document.createElement('div');
+ s.className='sparkle';
+ s.style.top=Math.random()*100+'vh';
+ s.style.left=Math.random()*100+'vw';
+ document.body.appendChild(s);
 }
 
-const btn = document.getElementById('playBtn');
-const music = document.getElementById('bgMusic');
-const photos = document.querySelectorAll('.photo-card');
-const fadeBlack = document.getElementById('fadeBlack');
-const thankText = document.getElementById('thankText');
+const btn=document.getElementById('btn');
+const music=document.getElementById('music');
+const photos=document.querySelectorAll('.photo');
+const fade=document.getElementById('fade');
+const thank=document.getElementById('thank');
 
-let index = 0;
-let loopTimer = null;
-let running = false;
+let i=0;
+let interval=null;
+let running=false;
 
-btn.addEventListener("click", () => {
+btn.onclick=()=>{
 
-    if(running) return;
-    running = true;
+ if(running) return;
+ running=true;
 
-    resetAll();
+ reset();
 
-    // 🔥 loop start first (audio wait nahi)
-    loopPhotos();
+ // start loop instantly
+ interval=setInterval(()=>{
+   animate();
+ },1200);
 
-    music.currentTime = 0;
-
-    music.play().catch(()=>{
-        console.log("Audio blocked but visuals running");
-    });
-});
-
-function loopPhotos(){
-
-    clearTimeout(loopTimer);
-
-    const current = photos[index];
-
-    current.style.transition="none";
-    current.style.transform="translateY(100%)";
-
-    setTimeout(()=>{
-        current.style.transition="transform 1s linear";
-        current.style.transform="translateY(0%)";
-    },50);
-
-    setTimeout(()=>{
-        current.style.transform="translateY(-100%)";
-    },1000);
-
-    index = (index + 1) % photos.length;
-
-    loopTimer = setTimeout(loopPhotos,1200);
-}
-
-// 🎵 Song end
-music.onended = () => {
-
-    clearTimeout(loopTimer);
-
-    fadeBlack.style.opacity = "1";
-
-    setTimeout(()=>{
-        thankText.classList.add("show");
-    },2000);
-
-    setTimeout(()=>{
-        resetAll();
-        running = false;
-    },5000);
+ music.currentTime=0;
+ music.play().catch(()=>{});
 };
 
-// 🔁 Reset
-function resetAll(){
+function animate(){
 
-    clearTimeout(loopTimer);
+ const p=photos[i];
 
-    index = 0;
+ p.style.transition="none";
+ p.style.transform="translateY(100%)";
 
-    photos.forEach(p=>{
-        p.style.transition="none";
-        p.style.transform="translateY(100%)";
-    });
+ setTimeout(()=>{
+   p.style.transition="1s linear";
+   p.style.transform="translateY(0)";
+ },50);
 
-    fadeBlack.style.opacity = "0";
-    thankText.classList.remove("show");
+ setTimeout(()=>{
+   p.style.transform="translateY(-100%)";
+ },1000);
 
-    music.pause();
-    music.currentTime = 0;
+ i=(i+1)%photos.length;
 }
+
+// end
+music.onended=()=>{
+
+ clearInterval(interval);
+
+ fade.style.opacity=1;
+
+ setTimeout(()=>{
+   thank.classList.add('show');
+ },2000);
+
+ setTimeout(()=>{
+   reset();
+   running=false;
+ },5000);
+};
+
+function reset(){
+
+ clearInterval(interval);
+
+ i=0;
+
+ photos.forEach(p=>{
+   p.style.transition="none";
+   p.style.transform="translateY(100%)";
+ });
+
+ fade.style.opacity=0;
+ thank.classList.remove('show');
+
+ music.pause();
+ music.currentTime=0;
+}
+
 </script>
 
 </body>
