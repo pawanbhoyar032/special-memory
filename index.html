@@ -3,227 +3,296 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ultimate Cinematic Experience</title>
+<title>Ultimate Cinematic Reel</title>
 
 <style>
-    :root {
-        --bg-color: #000000;
-        --accent-red: #ff4d4d;
-    }
+:root {
+    --bg-color: #000000;
+    --accent-red: #ff4d4d;
+    --nebula-purple: rgba(100, 50, 255, 0.2);
+    --nebula-blue: rgba(0, 150, 255, 0.15);
+}
 
-    body, html {
-        margin: 0; padding: 0;
-        width: 100%; height: 100%;
-        background-color: var(--bg-color);
-        display: flex; align-items: center; justify-content: center;
-        overflow: hidden; font-family: 'Georgia', serif;
-    }
+body {
+    background: var(--bg-color);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: 'Georgia', serif;
+}
 
-    /* --- Extra Cinematic Background Layers --- */
-    
-    /* 1. Vignette (Edges) */
-    body::before {
-        content: ''; position: fixed; inset: 0;
-        box-shadow: inset 0 0 250px rgba(0,0,0,1);
-        pointer-events: none; z-index: 60;
-    }
+/* --- CINEMATIC BACKGROUND EFFECTS --- */
 
-    /* 2. Deep Nebula Glow */
-    .nebula {
-        position: fixed; width: 200%; height: 200%;
-        background: radial-gradient(circle at 20% 30%, rgba(80, 40, 255, 0.15) 0%, transparent 40%),
-                    radial-gradient(circle at 80% 70%, rgba(255, 50, 50, 0.08) 0%, transparent 40%);
-        animation: nebulaShift 30s linear infinite;
-        opacity: 0; z-index: 1; transition: opacity 2s ease;
-    }
-    @keyframes nebulaShift {
-        0% { transform: rotate(0deg) scale(1); }
-        50% { transform: rotate(5deg) scale(1.1); }
-        100% { transform: rotate(0deg) scale(1); }
-    }
+/* 1. Deep Vignette (Edges) */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    box-shadow: inset 0 0 250px rgba(0,0,0,1), inset 0 0 100px rgba(0,0,0,0.9);
+    pointer-events: none;
+    z-index: 50;
+}
 
-    /* 3. Floating Bokeh Particles */
-    .bokeh {
-        position: fixed; width: 100%; height: 100%;
-        background-image: radial-gradient(circle at 10% 20%, rgba(255,255,255,0.03) 1px, transparent 1px);
-        background-size: 50px 50px;
-        z-index: 2; opacity: 0; transition: opacity 3s ease;
-    }
+/* 2. Nebula Glow (Visible Moving Clouds) */
+.nebula {
+    position: fixed;
+    width: 200%;
+    height: 200%;
+    background: 
+        radial-gradient(circle at 20% 30%, var(--nebula-purple) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, var(--nebula-blue) 0%, transparent 40%);
+    animation: moveNebula 25s linear infinite;
+    opacity: 0; /* Initially hidden */
+    z-index: 1;
+    transition: opacity 2s ease;
+}
 
-    #canvas { position: fixed; inset: 0; z-index: 3; pointer-events: none; opacity: 0; transition: opacity 1.5s ease; }
+@keyframes moveNebula {
+    0% { transform: translate(-20%, -20%) rotate(0deg); }
+    100% { transform: translate(-10%, -10%) rotate(360deg); }
+}
 
-    /* --- Content --- */
-    #overlay {
-        position: fixed; inset: 0; background: black;
-        z-index: 100; display: flex; flex-direction: column;
-        align-items: center; justify-content: center;
-        transition: background 1s ease;
-    }
+/* 3. Floating Bokeh (Large Soft Circles) */
+.bokeh {
+    position: fixed;
+    inset: 0;
+    background-image: 
+        radial-gradient(circle at 10% 10%, rgba(255,255,255,0.07) 5px, transparent 5px),
+        radial-gradient(circle at 90% 80%, rgba(255,255,255,0.04) 8px, transparent 8px),
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 4px, transparent 4px);
+    background-size: 200px 200px;
+    opacity: 0;
+    z-index: 2;
+    animation: moveBokeh 40s linear infinite;
+    transition: opacity 3s ease;
+}
 
-    #playBtn {
-        width: 85px; height: 85px; cursor: pointer;
-        fill: var(--accent-red); z-index: 101;
-        filter: drop-shadow(0 0 10px rgba(255,0,0,0.3));
-    }
+@keyframes moveBokeh {
+    from { background-position: 0 0; }
+    to { background-position: 400px 800px; }
+}
 
-    .surprise-text {
-        color: white; font-size: 18px; letter-spacing: 2px;
-        text-align: center; z-index: 90;
-        transition: transform 1s cubic-bezier(0.2, 0, 0.2, 1), opacity 0.8s ease;
-        margin-top: 25px; text-shadow: 0 0 15px rgba(255,255,255,0.5);
-    }
+/* 4. Sparkles (Stars) */
+.sparkle {
+    position: fixed;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 0 8px white;
+    z-index: 3;
+    animation: blink 2s infinite alternate;
+}
 
-    /* Text position when active */
-    .text-active {
-        position: absolute;
-        top: calc(50% + 230px);
-        margin-top: 0; opacity: 0.8;
-    }
+@keyframes blink {
+    0% { opacity: 0.1; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1.2); }
+}
 
-    .recorder-box {
-        width: 85vw; max-width: 280px; aspect-ratio: 5/7;
-        overflow: hidden; border-radius: 15px;
-        position: relative; z-index: 80;
-        opacity: 0; transform: scale(0.95);
-        transition: opacity 1.2s ease, transform 1.2s ease;
-        box-shadow: 0 0 80px rgba(0,0,0,1);
-        border: 1px solid rgba(255,255,255,0.08);
-    }
+/* --- CONTENT BOX --- */
 
-    .reel {
-        display: flex; flex-direction: column; height: 100%;
-        animation: smoothSlide 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
-        animation-play-state: paused;
-    }
+.recorder-box {
+    width: 85vw;
+    max-width: 280px;
+    aspect-ratio: 5/7;
+    overflow: hidden;
+    border-radius: 15px;
+    position: relative;
+    z-index: 40;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 1.5s cubic-bezier(0.2, 0, 0.2, 1);
+    box-shadow: 0 0 60px rgba(0,0,0,1);
+    border: 1px solid rgba(255,255,255,0.05);
+}
 
-    .photo-card { width: 100%; height: 100%; flex-shrink: 0; }
-    .photo-card img { width: 100%; height: 100%; object-fit: cover; }
+.photo-card {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    bottom: -100%;
+    transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-    @keyframes smoothSlide {
-        0%, 28% { transform: translateY(0); }
-        33%, 61% { transform: translateY(-100%); }
-        66%, 94% { transform: translateY(-200%); }
-        100% { transform: translateY(-300%); }
-    }
+.photo-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
-    #thankYou {
-        position: fixed; color: white; font-size: 30px;
-        opacity: 0; z-index: 110; transition: opacity 2s ease;
-        text-align: center; letter-spacing: 4px; font-weight: lighter;
-    }
+.blur { filter: blur(10px); opacity: 0; }
+.clear { filter: blur(0); opacity: 1; }
 
-    /* Utility */
-    .visible { opacity: 1 !important; }
-    .hidden { opacity: 0 !important; pointer-events: none; }
+/* --- BUTTON & TEXT --- */
+
+#overlay {
+    position: fixed;
+    inset: 0;
+    background: black;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: background 1.5s ease;
+}
+
+.play-button {
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    z-index: 101;
+    transition: opacity 0.5s ease;
+}
+
+.surprise-text {
+    color: white;
+    margin-top: 20px;
+    font-size: 18px;
+    letter-spacing: 2px;
+    text-align: center;
+    z-index: 105;
+    transition: all 1.2s ease;
+    text-shadow: 0 0 15px rgba(255,255,255,0.4);
+}
+
+/* Position text below box after play */
+.text-active {
+    position: absolute;
+    top: calc(50% + 220px);
+    margin-top: 0;
+    opacity: 0.8;
+}
+
+#thankYou {
+    position: fixed;
+    color: white;
+    font-size: 28px;
+    letter-spacing: 3px;
+    opacity: 0;
+    z-index: 110;
+    transition: opacity 2s ease;
+}
+
+.visible { opacity: 1 !important; }
+.hidden { opacity: 0 !important; pointer-events: none; }
 
 </style>
 </head>
+
 <body>
 
-    <div class="nebula" id="nebula"></div>
-    <div class="bokeh" id="bokeh"></div>
-    <canvas id="canvas"></canvas>
+<div class="nebula" id="nebula"></div>
+<div class="bokeh" id="bokeh"></div>
 
-    <div id="overlay">
-        <svg id="playBtn" viewBox="0 0 64 64">
-            <circle cx="32" cy="32" r="30" />
-            <polygon points="26,20 26,44 46,32" fill="white"/>
-        </svg>
-        <p class="surprise-text" id="msgText">I have a Surprise ❤️</p>
-    </div>
+<div id="overlay">
+    <svg class="play-button" id="playBtn" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="30" fill="#ff4d4d"/>
+        <polygon points="26,20 26,44 46,32" fill="white"/>
+    </svg>
+    <p class="surprise-text" id="msgText">I have a Surprise ❤️</p>
+</div>
 
-    <div class="recorder-box" id="box">
-        <div class="reel" id="reel">
-            <div class="photo-card"><img src="photo1.jpg"></div>
-            <div class="photo-card"><img src="photo2.jpg"></div>
-            <div class="photo-card"><img src="photo3.jpg"></div>
-            <div class="photo-card"><img src="photo1.jpg"></div>
-        </div>
-    </div>
+<div class="recorder-box" id="box">
+    <div class="photo-card blur"><img src="photo1.jpg"></div>
+    <div class="photo-card blur"><img src="photo2.jpg"></div>
+    <div class="photo-card blur"><img src="photo3.jpg"></div>
+</div>
 
-    <div id="thankYou">Thank You 🐣</div>
-    <audio id="bgMusic" src="music.mp3"></audio>
+<div id="thankYou">Thank You 🐣</div>
+
+<audio id="bgMusic" src="music.mp3"></audio>
 
 <script>
-    const playBtn = document.getElementById('playBtn');
-    const msgText = document.getElementById('msgText');
-    const music = document.getElementById('bgMusic');
-    const overlay = document.getElementById('overlay');
-    const box = document.getElementById('box');
-    const reel = document.getElementById('reel');
-    const thankYou = document.getElementById('thankYou');
-    const canvas = document.getElementById('canvas');
-    const nebula = document.getElementById('nebula');
-    const bokeh = document.getElementById('bokeh');
+// Sparkles generation
+for(let i=0; i<50; i++){
+    let s = document.createElement('div');
+    s.className = 'sparkle';
+    s.style.top = Math.random() * 100 + 'vh';
+    s.style.left = Math.random() * 100 + 'vw';
+    s.style.animationDelay = Math.random() * 5 + 's';
+    document.body.appendChild(s);
+}
 
-    playBtn.addEventListener('click', () => {
-        music.play();
-        
-        // Instant Lag-Free Transition
-        playBtn.classList.add('hidden');
-        overlay.style.background = "transparent";
-        msgText.classList.add('text-active');
-        
-        // Displaying background effects and photo reel
-        box.classList.add('visible');
-        box.style.transform = "scale(1)";
-        nebula.classList.add('visible');
-        bokeh.classList.add('visible');
-        canvas.classList.add('visible');
-        reel.style.animationPlayState = 'running';
-        
-        initParticles();
-    });
+const playBtn = document.getElementById('playBtn');
+const music = document.getElementById('bgMusic');
+const photos = document.querySelectorAll('.photo-card');
+const box = document.getElementById('box');
+const msgText = document.getElementById('msgText');
+const overlay = document.getElementById('overlay');
+const nebula = document.getElementById('nebula');
+const bokeh = document.getElementById('bokeh');
+const thankYou = document.getElementById('thankYou');
 
-    music.onended = function() {
-        // 1. Fade out the surprise text and photo box first
-        msgText.style.opacity = "0"; 
-        box.classList.remove('visible');
-        nebula.classList.remove('visible');
-        bokeh.classList.remove('visible');
-        canvas.classList.remove('visible');
-        
-        // 2. Return to black screen
-        overlay.style.background = "black";
-        overlay.classList.remove('hidden');
+let index = 0;
+let isPlaying = false;
 
-        // 3. Final pop-up
-        setTimeout(() => {
-            thankYou.classList.add('visible');
-        }, 1200);
-    };
+playBtn.addEventListener('click', function(){
+    if(isPlaying) return;
+    isPlaying = true;
 
-    // --- High Quality Particle System ---
-    const ctx = canvas.getContext('2d');
-    let particles = [];
+    // 1. Instant interaction (No Lag)
+    playBtn.classList.add('hidden');
+    overlay.style.background = "transparent";
+    
+    // 2. Show Effects & Box
+    nebula.classList.add('visible');
+    bokeh.classList.add('visible');
+    box.classList.add('visible');
+    box.style.transform = "scale(1)";
+    msgText.classList.add('text-active');
 
-    function initParticles() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        for(let i=0; i<80; i++) {
-            particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                size: Math.random() * 1.5 + 0.2,
-                speed: Math.random() * 0.4 + 0.05,
-                opacity: Math.random() * 0.6
-            });
-        }
-        animate();
+    music.play();
+    reel();
+});
+
+function reel(){
+    if(!isPlaying) return;
+
+    const current = photos[index];
+    const prev = photos[(index - 1 + photos.length) % photos.length];
+
+    // Reset previous photo
+    if(prev){
+        prev.classList.remove('clear');
+        prev.classList.add('blur');
+        prev.style.transform = 'translateY(-120%) scale(0.9)';
     }
 
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => {
-            p.y -= p.speed;
-            if(p.y < 0) p.y = canvas.height;
-            ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fill();
-        });
-        requestAnimationFrame(animate);
-    }
+    // Set current photo
+    current.style.transform = 'translateY(100%) scale(0.9)';
+    
+    setTimeout(()=>{
+        current.style.transform = 'translateY(-100%) scale(1)';
+        current.classList.remove('blur');
+        current.classList.add('clear');
+    }, 50);
+
+    index = (index + 1) % photos.length;
+    setTimeout(reel, 2500); // Timing adjustment for 6s feel
+}
+
+// End logic
+music.onended = function() {
+    isPlaying = false;
+    // Fade everything out
+    box.classList.remove('visible');
+    nebula.classList.remove('visible');
+    bokeh.classList.remove('visible');
+    msgText.classList.remove('visible');
+    
+    overlay.style.background = "black";
+    overlay.classList.remove('hidden');
+
+    setTimeout(() => {
+        thankYou.classList.add('visible');
+    }, 1200);
+};
+
 </script>
 
 </body>
