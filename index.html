@@ -76,8 +76,8 @@
         display: flex;
         flex-direction: column;
         height: 100%;
-        /* Animation: 18s total for smooth transitions and pauses */
-        animation: smoothSlide 18s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+        /* वेळ १८ सेकंदांवरून ९ सेकंद केली आहे */
+        animation: smoothSlide 9s cubic-bezier(0.45, 0, 0.55, 1) infinite;
         animation-play-state: paused;
     }
 
@@ -182,21 +182,13 @@
 
     playBtn.addEventListener('click', () => {
         music.play();
-        
-        // बटन आणि टेक्स्ट लपवणे
         playBtn.classList.add('hidden');
         msgText.classList.add('hidden');
-        
-        // बॅकग्राउंड ट्रान्सपरंट करणे जेणेकरून फोटो दिसतील
         overlay.style.background = "transparent";
-        
-        // फोटो बॉक्स आणि स्पार्कल सुरू करणे
         box.classList.add('visible');
         box.style.transform = "scale(1)";
         canvas.classList.add('visible');
-        
         reel.style.animationPlayState = 'running';
-        
         initParticles();
     });
 
@@ -205,13 +197,11 @@
         overlay.classList.remove('hidden');
         box.classList.remove('visible');
         canvas.classList.remove('visible');
-        
         setTimeout(() => {
             thankYou.classList.add('visible');
         }, 1000);
     };
 
-    // Sparkle Canvas Logic
     const ctx = canvas.getContext('2d');
     let particles = [];
 
