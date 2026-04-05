@@ -1,42 +1,37 @@
 <!DOCTYPE html>
-<html lang="mr">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Memory</title>
+<title>Simple Loop</title>
 
 <style>
 body{
   margin:0;
   height:100vh;
   display:flex;
-  flex-direction:column;
   justify-content:center;
   align-items:center;
   background:#000;
-  overflow:hidden;
-  font-family:Arial;
 }
 
-.recorder-box{
+.box{
   width:90vw;
   max-width:260px;
   aspect-ratio:5/7;
   overflow:hidden;
   position:relative;
-  border-radius:15px;
 }
 
-.photo-card{
+.photo{
   position:absolute;
   width:100%;
   height:100%;
   bottom:-100%;
-  left:0;
-  transition:all 1.2s ease-in-out;
+  transition:all 1s ease;
 }
 
-.photo-card img{
+.photo img{
   width:100%;
   height:100%;
   object-fit:cover;
@@ -45,84 +40,57 @@ body{
 .blur{filter:blur(8px);}
 .clear{filter:blur(0);}
 
-.play-button{
-  width:70px;
-  height:70px;
-  margin-top:20px;
-  cursor:pointer;
-}
-
-.click-text{
-  color:#fff;
-  margin-top:10px;
+button{
+  position:absolute;
+  bottom:20px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="recorder-box">
-  <div class="photo-card blur"><img src="photo1.jpg"></div>
-  <div class="photo-card blur"><img src="photo2.jpg"></div>
-  <div class="photo-card blur"><img src="photo3.jpg"></div>
+<div class="box">
+  <div class="photo blur"><img src="photo1.jpg"></div>
+  <div class="photo blur"><img src="photo2.jpg"></div>
+  <div class="photo blur"><img src="photo3.jpg"></div>
 </div>
 
-<svg class="play-button" id="playBtn" viewBox="0 0 64 64">
-  <circle cx="32" cy="32" r="30" fill="red"/>
-  <polygon points="26,20 26,44 46,32" fill="white"/>
-</svg>
+<button onclick="start()">Play</button>
 
-<p class="click-text">I have a Surprise ❤️</p>
-
-<audio id="bgMusic" src="music.mp3"></audio>
+<audio id="music" src="music.mp3"></audio>
 
 <script>
 
-document.addEventListener("DOMContentLoaded", function(){
+let photos = document.querySelectorAll(".photo");
+let index = 0;
+let started = false;
 
-  const playBtn = document.getElementById("playBtn");
-  const music = document.getElementById("bgMusic");
-  const photos = document.querySelectorAll(".photo-card");
+function start(){
+  if(started) return;
+  started = true;
 
-  let index = 0;
-  let started = false;
+  document.getElementById("music").play();
+  show();
+}
 
-  playBtn.addEventListener("click", function(){
-    if(started) return;
-    started = true;
+function show(){
+  let current = photos[index];
+  let prev = photos[(index-1+photos.length)%photos.length];
 
-    music.currentTime = 0;
-    music.play();
+  // previous blur + move
+  prev.classList.remove("clear");
+  prev.classList.add("blur");
+  prev.style.transform = "translateY(-120%)";
 
-    runReel();
-  });
+  // current show
+  current.style.transform = "translateY(-100%)";
+  current.classList.remove("blur");
+  current.classList.add("clear");
 
-  function runReel(){
-    const current = photos[index];
-    const prev = photos[(index - 1 + photos.length) % photos.length];
+  index = (index+1)%photos.length;
 
-    if(prev){
-      prev.classList.remove("clear");
-      prev.classList.add("blur");
-      prev.style.transform = "translateY(-120%)";
-    }
-
-    current.style.transition = "none";
-    current.style.transform = "translateY(100%)";
-
-    setTimeout(function(){
-      current.style.transition = "all 1.2s ease-in-out";
-      current.style.transform = "translateY(-100%)";
-      current.classList.remove("blur");
-      current.classList.add("clear");
-    }, 50);
-
-    index = (index + 1) % photos.length;
-
-    setTimeout(runReel, 3200);
-  }
-
-});
+  setTimeout(show,3000);
+}
 
 </script>
 
