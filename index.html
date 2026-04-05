@@ -56,45 +56,43 @@ button{
 <audio id="music" src="music.mp3"></audio>
 
 <script>
-
 let photos = document.querySelectorAll(".photo");
 let index = 0;
-let started = false;
 let interval;
+let started = false;
 
 function start(){
   if(started) return;
   started = true;
 
   const music = document.getElementById("music");
-  music.currentTime = 0;
   music.play();
 
-  // total duration per photo (sync basic)
-  let duration = music.duration || 9; // fallback
-  let perPhoto = duration / photos.length;
+  // 👉 manually set duration for perfect sync
+  let totalTime = 30; // <-- change this (seconds of song)
+  let perPhoto = totalTime / photos.length;
 
   show();
   interval = setInterval(show, perPhoto * 1000);
 
-  music.onended = () => clearInterval(interval);
+  music.onended = function(){
+    clearInterval(interval);
+  };
 }
 
 function show(){
   let current = photos[index];
 
-  // reset position
   current.style.transition = "none";
   current.style.bottom = "-100%";
 
   setTimeout(()=>{
     current.style.transition = "bottom 1s linear";
-    current.style.bottom = "100%"; // bottom → top
+    current.style.bottom = "100%";
   },50);
 
   index = (index + 1) % photos.length;
 }
-
 </script>
 
 </body>
