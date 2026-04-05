@@ -3,128 +3,95 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cinematic Memory Reel - 6s</title>
+<title>Ultimate Cinematic Experience</title>
 
 <style>
     :root {
         --bg-color: #000000;
         --accent-red: #ff4d4d;
-        --nebula-glow: rgba(100, 50, 255, 0.12);
     }
 
     body, html {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
+        margin: 0; padding: 0;
+        width: 100%; height: 100%;
         background-color: var(--bg-color);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        font-family: 'Georgia', serif;
+        display: flex; align-items: center; justify-content: center;
+        overflow: hidden; font-family: 'Georgia', serif;
     }
 
-    /* Cinematic Edges (Vignette) */
+    /* --- Extra Cinematic Background Layers --- */
+    
+    /* 1. Vignette (Edges) */
     body::before {
-        content: '';
-        position: fixed;
-        inset: 0;
-        box-shadow: inset 0 0 200px rgba(0,0,0,1);
-        pointer-events: none;
-        z-index: 50;
+        content: ''; position: fixed; inset: 0;
+        box-shadow: inset 0 0 250px rgba(0,0,0,1);
+        pointer-events: none; z-index: 60;
     }
 
-    /* Background Nebula Glow */
-    .nebula-bg {
-        position: fixed;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle at 30% 30%, var(--nebula-glow) 0%, transparent 40%);
-        animation: nebulaMove 20s linear infinite;
-        opacity: 0;
-        z-index: 1;
-        transition: opacity 3s ease;
+    /* 2. Deep Nebula Glow */
+    .nebula {
+        position: fixed; width: 200%; height: 200%;
+        background: radial-gradient(circle at 20% 30%, rgba(80, 40, 255, 0.15) 0%, transparent 40%),
+                    radial-gradient(circle at 80% 70%, rgba(255, 50, 50, 0.08) 0%, transparent 40%);
+        animation: nebulaShift 30s linear infinite;
+        opacity: 0; z-index: 1; transition: opacity 2s ease;
+    }
+    @keyframes nebulaShift {
+        0% { transform: rotate(0deg) scale(1); }
+        50% { transform: rotate(5deg) scale(1.1); }
+        100% { transform: rotate(0deg) scale(1); }
     }
 
-    @keyframes nebulaMove {
-        0% { transform: translate(-20%, -20%) rotate(0deg); }
-        100% { transform: translate(-10%, -10%) rotate(360deg); }
+    /* 3. Floating Bokeh Particles */
+    .bokeh {
+        position: fixed; width: 100%; height: 100%;
+        background-image: radial-gradient(circle at 10% 20%, rgba(255,255,255,0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+        z-index: 2; opacity: 0; transition: opacity 3s ease;
     }
 
-    /* Sparkle Canvas */
-    #canvas {
-        position: fixed;
-        inset: 0;
-        z-index: 2;
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 2s ease;
-    }
+    #canvas { position: fixed; inset: 0; z-index: 3; pointer-events: none; opacity: 0; transition: opacity 1.5s ease; }
 
-    /* Initial Overlay */
+    /* --- Content --- */
     #overlay {
-        position: fixed;
-        inset: 0;
-        background: black;
-        z-index: 100;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        transition: background 2s ease;
+        position: fixed; inset: 0; background: black;
+        z-index: 100; display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        transition: background 1s ease;
     }
 
-    /* Play Button (Static as requested) */
     #playBtn {
-        width: 80px;
-        height: 80px;
-        cursor: pointer;
-        fill: var(--accent-red);
-        z-index: 101;
+        width: 85px; height: 85px; cursor: pointer;
+        fill: var(--accent-red); z-index: 101;
+        filter: drop-shadow(0 0 10px rgba(255,0,0,0.3));
     }
 
-    /* Surprise Text */
     .surprise-text {
-        color: white;
-        font-size: 18px;
-        letter-spacing: 1.5px;
-        text-align: center;
-        z-index: 105;
-        transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-        margin-top: 20px;
-        text-shadow: 0 0 10px rgba(255,255,255,0.4);
+        color: white; font-size: 18px; letter-spacing: 2px;
+        text-align: center; z-index: 90;
+        transition: transform 1s cubic-bezier(0.2, 0, 0.2, 1), opacity 0.8s ease;
+        margin-top: 25px; text-shadow: 0 0 15px rgba(255,255,255,0.5);
     }
 
-    /* Active State: Moves text below photo box */
+    /* Text position when active */
     .text-active {
         position: absolute;
-        top: calc(50% + 220px);
-        margin-top: 0;
-        opacity: 0.9;
+        top: calc(50% + 230px);
+        margin-top: 0; opacity: 0.8;
     }
 
-    /* Photo Box 5:7 */
     .recorder-box {
-        width: 85vw;
-        max-width: 280px;
-        aspect-ratio: 5/7;
-        overflow: hidden;
-        border-radius: 12px;
-        position: relative;
-        z-index: 40;
-        opacity: 0;
-        transform: scale(0.9);
-        transition: all 1.5s ease;
-        box-shadow: 0 0 50px rgba(0,0,0,1);
-        border: 1px solid rgba(255,255,255,0.05);
+        width: 85vw; max-width: 280px; aspect-ratio: 5/7;
+        overflow: hidden; border-radius: 15px;
+        position: relative; z-index: 80;
+        opacity: 0; transform: scale(0.95);
+        transition: opacity 1.2s ease, transform 1.2s ease;
+        box-shadow: 0 0 80px rgba(0,0,0,1);
+        border: 1px solid rgba(255,255,255,0.08);
     }
 
     .reel {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        /* Animation Speed: 6 Seconds */
+        display: flex; flex-direction: column; height: 100%;
         animation: smoothSlide 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
         animation-play-state: paused;
     }
@@ -139,18 +106,13 @@
         100% { transform: translateY(-300%); }
     }
 
-    /* End Message */
     #thankYou {
-        position: fixed;
-        color: white;
-        font-size: 26px;
-        opacity: 0;
-        z-index: 200;
-        transition: opacity 2s ease;
-        text-align: center;
-        letter-spacing: 2px;
+        position: fixed; color: white; font-size: 30px;
+        opacity: 0; z-index: 110; transition: opacity 2s ease;
+        text-align: center; letter-spacing: 4px; font-weight: lighter;
     }
 
+    /* Utility */
     .visible { opacity: 1 !important; }
     .hidden { opacity: 0 !important; pointer-events: none; }
 
@@ -158,7 +120,8 @@
 </head>
 <body>
 
-    <div class="nebula-bg" id="nebula"></div>
+    <div class="nebula" id="nebula"></div>
+    <div class="bokeh" id="bokeh"></div>
     <canvas id="canvas"></canvas>
 
     <div id="overlay">
@@ -191,61 +154,73 @@
     const thankYou = document.getElementById('thankYou');
     const canvas = document.getElementById('canvas');
     const nebula = document.getElementById('nebula');
+    const bokeh = document.getElementById('bokeh');
 
     playBtn.addEventListener('click', () => {
         music.play();
         
+        // Instant Lag-Free Transition
         playBtn.classList.add('hidden');
         overlay.style.background = "transparent";
         msgText.classList.add('text-active');
         
-        setTimeout(() => {
-            box.classList.add('visible');
-            box.style.transform = "scale(1)";
-            nebula.classList.add('visible');
-            canvas.classList.add('visible');
-            reel.style.animationPlayState = 'running';
-            initParticles();
-        }, 500);
+        // Displaying background effects and photo reel
+        box.classList.add('visible');
+        box.style.transform = "scale(1)";
+        nebula.classList.add('visible');
+        bokeh.classList.add('visible');
+        canvas.classList.add('visible');
+        reel.style.animationPlayState = 'running';
+        
+        initParticles();
     });
 
     music.onended = function() {
-        overlay.style.background = "black";
-        overlay.classList.remove('hidden');
+        // 1. Fade out the surprise text and photo box first
+        msgText.style.opacity = "0"; 
         box.classList.remove('visible');
-        msgText.classList.remove('visible');
         nebula.classList.remove('visible');
+        bokeh.classList.remove('visible');
         canvas.classList.remove('visible');
         
+        // 2. Return to black screen
+        overlay.style.background = "black";
+        overlay.classList.remove('hidden');
+
+        // 3. Final pop-up
         setTimeout(() => {
             thankYou.classList.add('visible');
-        }, 1500);
+        }, 1200);
     };
 
-    // Sparkle Particle Effect
+    // --- High Quality Particle System ---
     const ctx = canvas.getContext('2d');
     let particles = [];
+
     function initParticles() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        for(let i=0; i<60; i++) {
+        for(let i=0; i<80; i++) {
             particles.push({
-                x: Math.random()*canvas.width,
-                y: Math.random()*canvas.height,
-                size: Math.random()*1.5+0.5,
-                speed: Math.random()*0.3+0.1,
-                opacity: Math.random()
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 1.5 + 0.2,
+                speed: Math.random() * 0.4 + 0.05,
+                opacity: Math.random() * 0.6
             });
         }
         animate();
     }
+
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         particles.forEach(p => {
             p.y -= p.speed;
             if(p.y < 0) p.y = canvas.height;
             ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
-            ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
         });
         requestAnimationFrame(animate);
     }
