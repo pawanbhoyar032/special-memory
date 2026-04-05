@@ -115,7 +115,6 @@ body{
 <audio id="music" src="music.mp3"></audio>
 
 <script>
-
 // sparkles
 for(let i=0;i<40;i++){
  let s=document.createElement('div');
@@ -134,8 +133,9 @@ const thank=document.getElementById('thank');
 let i=0;
 let running=false;
 let rafId=null;
+let start=null;
 
-// play
+// ▶ PLAY
 btn.onclick=()=>{
 
  if(running){
@@ -143,6 +143,7 @@ btn.onclick=()=>{
  }
 
  running=true;
+ start=null;
 
  animateLoop();
 
@@ -150,10 +151,8 @@ btn.onclick=()=>{
  music.play().catch(()=>{});
 };
 
-// 🔥 smoother animation using requestAnimationFrame
+// 🔥 Smooth loop
 function animateLoop(){
-
- let start=null;
 
  function frame(time){
 
@@ -162,13 +161,23 @@ function animateLoop(){
    if(!start) start=time;
    let progress=time-start;
 
+   let current=photos[i];
+
+   // reset all photos behind
+   photos.forEach((p,idx)=>{
+     if(idx!==i){
+       p.style.transform="translateY(100%)";
+     }
+   });
+
    if(progress<1000){
-      photos[i].style.transform=`translateY(${100-progress/10}%)`;
+      current.style.transform=`translateY(${100-progress/10}%)`;
    }
    else if(progress<2000){
-      photos[i].style.transform=`translateY(-${(progress-1000)/10}%)`;
+      current.style.transform=`translateY(-${(progress-1000)/10}%)`;
    }
    else{
+      current.style.transform="translateY(100%)"; // reset current
       i=(i+1)%photos.length;
       start=time;
    }
@@ -179,7 +188,7 @@ function animateLoop(){
  rafId=requestAnimationFrame(frame);
 }
 
-// end
+// 🎵 END
 music.onended=()=>{
 
  running=false;
@@ -192,17 +201,17 @@ music.onended=()=>{
  },2000);
 };
 
-// reset
+// 🔁 RESET
 function reset(){
 
  running=false;
  cancelAnimationFrame(rafId);
 
  i=0;
+ start=null;
 
  photos.forEach(p=>{
    p.style.transform="translateY(100%)";
-   p.style.transition="none";
  });
 
  fade.style.opacity=0;
@@ -211,7 +220,6 @@ function reset(){
  music.pause();
  music.currentTime=0;
 }
-</script>
 
 </body>
 </html>
