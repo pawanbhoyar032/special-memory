@@ -3,11 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cinematic Memory Reel</title>
+<title>Premium Cinematic Reel</title>
 
 <style>
     :root {
         --bg-color: #000000;
+        --text-color: rgba(255, 255, 255, 0.9);
+        --accent-red: #ff4d4d;
+        --nebula-glow: rgba(100, 50, 255, 0.15); /* Deep purple/blue glow */
     }
 
     body, html {
@@ -21,30 +24,67 @@
         justify-content: center;
         overflow: hidden;
         font-family: 'Georgia', serif;
+        color: var(--text-color);
     }
 
-    /* Cinematic Edges (Vignette) */
-    body::after {
+    /* --- Advanced Cinematic Background Effects --- */
+
+    /* 1. Cinematic Edges (Deep Vignette) */
+    body::before {
         content: '';
         position: fixed;
         inset: 0;
-        box-shadow: inset 0 0 150px rgba(0,0,0,0.9);
+        box-shadow: inset 0 0 200px rgba(0,0,0,1), inset 0 0 100px rgba(0,0,0,0.8);
         pointer-events: none;
-        z-index: 20;
+        z-index: 30; /* Top layer vignette */
     }
 
-    /* Sparkle & Glow Background */
+    /* 2. Moving Nebula Glow (Halos) */
+    .nebula-bg {
+        position: fixed;
+        width: 200%;
+        height: 200%;
+        background: 
+            radial-gradient(circle at 30% 30%, var(--nebula-glow) 0%, transparent 40%),
+            radial-gradient(circle at 70% 70%, rgba(255, 100, 50, 0.1) 0%, transparent 40%);
+        animation: nebulaMove 20s ease-in-out infinite;
+        opacity: 0; /* Hidden initially */
+        z-index: 2;
+        pointer-events: none;
+        transition: opacity 3s ease;
+    }
+
+    @keyframes nebulaMove {
+        0%, 100% { transform: translate(-25%, -25%) rotate(0deg); }
+        50% { transform: translate(-10%, -10%) rotate(10deg); }
+    }
+
+    /* 3. Horizontal Anamorphic Lens Flare Line */
+    .lens-flare-line {
+        position: fixed;
+        top: 50%;
+        left: -50%;
+        width: 200%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(100, 200, 255, 0.3), transparent);
+        box-shadow: 0 0 15px rgba(100, 200, 255, 0.2);
+        opacity: 0;
+        z-index: 3;
+        pointer-events: none;
+        transition: opacity 4s ease;
+    }
+
+    /* 4. Sparkle Canvas */
     #canvas {
         position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        z-index: 1;
+        inset: 0;
+        z-index: 4;
         pointer-events: none;
         opacity: 0;
         transition: opacity 2s ease;
     }
 
-    /* Initial Black Fade Layer */
+    /* --- Initial Overlay & Surprise Text --- */
     #overlay {
         position: fixed;
         inset: 0;
@@ -54,29 +94,46 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        transition: background 2s ease, opacity 2s ease;
+        transition: background 2s ease;
     }
 
-    /* Photo Container */
+    /* Surprise Text (Kept visible behind the photo box) */
+    .surprise-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 20px;
+        letter-spacing: 2px;
+        text-align: center;
+        z-index: 10; /* Behind the recorder-box */
+        opacity: 0;
+        transition: opacity 1.5s ease;
+        text-shadow: 0 0 10px rgba(255,255,255,0.5);
+    }
+
+    /* --- Photo Box & Reel --- */
     .recorder-box {
         width: 85vw;
         max-width: 300px;
         aspect-ratio: 5/7;
         overflow: hidden;
-        border-radius: 15px;
+        border-radius: 10px; /* Sharper, more film-like edges */
         position: relative;
-        z-index: 5;
+        z-index: 20; /* Above the surprise text, below vignette */
         opacity: 0;
-        transform: scale(0.9);
-        transition: all 2s ease;
-        box-shadow: 0 0 50px rgba(0,0,0,1);
+        transform: scale(0.9) translateY(20px);
+        transition: all 2.5s cubic-bezier(0.23, 1, 0.32, 1); /* Cinematic entry */
+        box-shadow: 0 0 60px rgba(0,0,0,1), 0 0 20px rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.03);
     }
 
     .reel {
         display: flex;
         flex-direction: column;
         height: 100%;
-        /* वेळ १८ सेकंदांवरून ९ सेकंद केली आहे */
+        /* Speed: 9s (Faster, 1.5-2s pause per photo) */
         animation: smoothSlide 9s cubic-bezier(0.45, 0, 0.55, 1) infinite;
         animation-play-state: paused;
     }
@@ -100,53 +157,48 @@
         100% { transform: translateY(-300%); }
     }
 
-    /* Play Button & Text */
+    /* --- Play Button & State Classes --- */
     #playBtn {
-        width: 80px;
-        height: 80px;
+        width: 85px;
+        height: 85px;
         cursor: pointer;
-        fill: #ff4d4d;
-        filter: drop-shadow(0 0 15px rgba(255,77,77,0.6));
-        transition: transform 0.3s ease;
+        fill: var(--accent-red);
+        filter: drop-shadow(0 0 20px rgba(255,77,77,0.7));
+        transition: all 0.5s ease;
         z-index: 101;
         animation: pulse 1.5s infinite;
     }
 
     @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-        100% { transform: scale(1); }
-    }
-
-    .surprise-text {
-        color: white;
-        margin-top: 20px;
-        font-size: 18px;
-        letter-spacing: 1px;
-        text-align: center;
-        z-index: 101;
-        opacity: 0.8;
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.08); opacity: 0.8; }
+        100% { transform: scale(1); opacity: 1; }
     }
 
     /* End Message */
     #thankYou {
         position: fixed;
         color: white;
-        font-size: 26px;
-        letter-spacing: 2px;
+        font-size: 28px;
+        letter-spacing: 3px;
         opacity: 0;
-        z-index: 102;
-        transition: opacity 2s ease;
+        z-index: 102; /* Top layer */
+        transition: opacity 2.5s ease;
         text-align: center;
+        text-shadow: 0 0 15px rgba(255,255,255,0.6);
     }
 
+    /* Utility Classes to control visibility */
     .visible { opacity: 1 !important; }
-    .hidden { opacity: 0 !important; pointer-events: none; transition: opacity 0.8s ease; }
+    .hidden { opacity: 0 !important; pointer-events: none; transition: opacity 1s ease; }
+    .running { animation-play-state: running !important; }
 
 </style>
 </head>
 <body>
 
+    <div class="nebula-bg" id="nebula"></div>
+    <div class="lens-flare-line" id="flare"></div>
     <canvas id="canvas"></canvas>
 
     <div id="overlay">
@@ -154,15 +206,16 @@
             <circle cx="32" cy="32" r="30" />
             <polygon points="26,20 26,44 46,32" fill="white"/>
         </svg>
-        <p class="surprise-text" id="msgText">I have a Surprise ❤️</p>
     </div>
+
+    <p class="surprise-text" id="msgText">I have a Surprise ❤️</p>
 
     <div class="recorder-box" id="box">
         <div class="reel" id="reel">
-            <div class="photo-card"><img src="photo1.jpg"></div>
-            <div class="photo-card"><img src="photo2.jpg"></div>
-            <div class="photo-card"><img src="photo3.jpg"></div>
-            <div class="photo-card"><img src="photo1.jpg"></div>
+            <div class="photo-card"><img src="photo1.jpg" alt="Memory 1"></div>
+            <div class="photo-card"><img src="photo2.jpg" alt="Memory 2"></div>
+            <div class="photo-card"><img src="photo3.jpg" alt="Memory 3"></div>
+            <div class="photo-card"><img src="photo1.jpg" alt="Loop Constant"></div>
         </div>
     </div>
 
@@ -179,42 +232,75 @@
     const reel = document.getElementById('reel');
     const thankYou = document.getElementById('thankYou');
     const canvas = document.getElementById('canvas');
+    const nebula = document.getElementById('nebula');
+    const flare = document.getElementById('flare');
 
     playBtn.addEventListener('click', () => {
-        music.play();
+        music.play().catch(e => console.log("Audio requires interaction first."));
+        
+        // 1. Hide only the Play Button, remove black background
         playBtn.classList.add('hidden');
-        msgText.classList.add('hidden');
         overlay.style.background = "transparent";
-        box.classList.add('visible');
-        box.style.transform = "scale(1)";
-        canvas.classList.add('visible');
-        reel.style.animationPlayState = 'running';
-        initParticles();
+        overlay.style.pointerEvents = "none"; // Allow clicks to pass through overlay
+        
+        // 2. Show the Surprise Text (Stationary in the background)
+        msgText.classList.add('visible');
+        
+        // 3. Cinematic entry of the Photo Box (delayed slightly for effect)
+        setTimeout(() => {
+            box.classList.add('visible');
+            box.style.transform = "scale(1) translateY(0)";
+            
+            // 4. Show Cinematic Background Effects
+            nebula.classList.add('visible');
+            flare.classList.add('visible');
+            canvas.classList.add('visible');
+            
+            // 5. Start Reel Animation
+            reel.classList.add('running');
+            
+            initParticles(); // Start Sparkles
+        }, 800);
     });
 
+    // When music ends:
     music.onended = function() {
+        // Fade everything out to black
         overlay.style.background = "black";
         overlay.classList.remove('hidden');
+        overlay.style.pointerEvents = "auto";
+        
         box.classList.remove('visible');
+        nebula.classList.remove('visible');
+        flare.classList.remove('visible');
         canvas.classList.remove('visible');
+        msgText.classList.remove('visible'); // Surprise text also fades out now
+        
+        // Show Final Message
         setTimeout(() => {
             thankYou.classList.add('visible');
-        }, 1000);
+        }, 1500);
     };
 
+    // --- Sparkle Canvas Logic ---
     const ctx = canvas.getContext('2d');
     let particles = [];
 
     function initParticles() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        for(let i=0; i<60; i++) {
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        window.dispatchEvent(new Event('resize')); // Set initial size
+
+        for(let i=0; i<70; i++) {
             particles.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                size: Math.random() * 2 + 0.5,
-                speed: Math.random() * 0.4 + 0.1,
-                opacity: Math.random()
+                size: Math.random() * 1.8 + 0.3,
+                speed: Math.random() * 0.3 + 0.05,
+                opacity: Math.random() * 0.8
             });
         }
         animate();
