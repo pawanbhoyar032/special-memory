@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simple Loop</title>
+<title>Simple Reel</title>
 
 <style>
 body{
@@ -28,7 +28,6 @@ body{
   width:100%;
   height:100%;
   bottom:-100%;
-  transition:all 1s ease;
 }
 
 .photo img{
@@ -36,9 +35,6 @@ body{
   height:100%;
   object-fit:cover;
 }
-
-.blur{filter:blur(8px);}
-.clear{filter:blur(0);}
 
 button{
   position:absolute;
@@ -50,9 +46,9 @@ button{
 <body>
 
 <div class="box">
-  <div class="photo blur"><img src="photo1.jpg"></div>
-  <div class="photo blur"><img src="photo2.jpg"></div>
-  <div class="photo blur"><img src="photo3.jpg"></div>
+  <div class="photo"><img src="photo1.jpg"></div>
+  <div class="photo"><img src="photo2.jpg"></div>
+  <div class="photo"><img src="photo3.jpg"></div>
 </div>
 
 <button onclick="start()">Play</button>
@@ -64,32 +60,39 @@ button{
 let photos = document.querySelectorAll(".photo");
 let index = 0;
 let started = false;
+let interval;
 
 function start(){
   if(started) return;
   started = true;
 
-  document.getElementById("music").play();
+  const music = document.getElementById("music");
+  music.currentTime = 0;
+  music.play();
+
+  // total duration per photo (sync basic)
+  let duration = music.duration || 9; // fallback
+  let perPhoto = duration / photos.length;
+
   show();
+  interval = setInterval(show, perPhoto * 1000);
+
+  music.onended = () => clearInterval(interval);
 }
 
 function show(){
   let current = photos[index];
-  let prev = photos[(index-1+photos.length)%photos.length];
 
-  // previous blur + move
-  prev.classList.remove("clear");
-  prev.classList.add("blur");
-  prev.style.transform = "translateY(-120%)";
+  // reset position
+  current.style.transition = "none";
+  current.style.bottom = "-100%";
 
-  // current show
-  current.style.transform = "translateY(-100%)";
-  current.classList.remove("blur");
-  current.classList.add("clear");
+  setTimeout(()=>{
+    current.style.transition = "bottom 1s linear";
+    current.style.bottom = "100%"; // bottom → top
+  },50);
 
-  index = (index+1)%photos.length;
-
-  setTimeout(show,3000);
+  index = (index + 1) % photos.length;
 }
 
 </script>
