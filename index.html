@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Premium Cinematic Reel</title>
+<title>Cinematic Memory Reel - 6s</title>
 
 <style>
     :root {
@@ -25,7 +25,7 @@
         font-family: 'Georgia', serif;
     }
 
-    /* Cinematic Edges */
+    /* Cinematic Edges (Vignette) */
     body::before {
         content: '';
         position: fixed;
@@ -35,7 +35,7 @@
         z-index: 50;
     }
 
-    /* Background Effects */
+    /* Background Nebula Glow */
     .nebula-bg {
         position: fixed;
         width: 200%;
@@ -52,6 +52,7 @@
         100% { transform: translate(-10%, -10%) rotate(360deg); }
     }
 
+    /* Sparkle Canvas */
     #canvas {
         position: fixed;
         inset: 0;
@@ -74,37 +75,36 @@
         transition: background 2s ease;
     }
 
-    /* Play Button (No Effect) */
+    /* Play Button (Static as requested) */
     #playBtn {
         width: 80px;
         height: 80px;
         cursor: pointer;
         fill: var(--accent-red);
         z-index: 101;
-        transition: opacity 0.5s ease;
     }
 
-    /* Surprise Text Logic */
+    /* Surprise Text */
     .surprise-text {
         color: white;
         font-size: 18px;
         letter-spacing: 1.5px;
         text-align: center;
         z-index: 105;
-        transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-        margin-top: 20px; /* सुरुवातीला बटनच्या खाली अंतर */
+        transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-top: 20px;
         text-shadow: 0 0 10px rgba(255,255,255,0.4);
     }
 
-    /* जेव्हा प्ले बटन दाबले जाते तेव्हाची पोझिशन */
+    /* Active State: Moves text below photo box */
     .text-active {
         position: absolute;
-        top: calc(50% + 230px); /* फोटो रीलच्या खाली सेट केले */
+        top: calc(50% + 220px);
         margin-top: 0;
         opacity: 0.9;
     }
 
-    /* Photo Box */
+    /* Photo Box 5:7 */
     .recorder-box {
         width: 85vw;
         max-width: 280px;
@@ -115,7 +115,7 @@
         z-index: 40;
         opacity: 0;
         transform: scale(0.9);
-        transition: all 2s ease;
+        transition: all 1.5s ease;
         box-shadow: 0 0 50px rgba(0,0,0,1);
         border: 1px solid rgba(255,255,255,0.05);
     }
@@ -124,7 +124,8 @@
         display: flex;
         flex-direction: column;
         height: 100%;
-        animation: smoothSlide 9s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+        /* Animation Speed: 6 Seconds */
+        animation: smoothSlide 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
         animation-play-state: paused;
     }
 
@@ -147,6 +148,7 @@
         z-index: 200;
         transition: opacity 2s ease;
         text-align: center;
+        letter-spacing: 2px;
     }
 
     .visible { opacity: 1 !important; }
@@ -193,14 +195,10 @@
     playBtn.addEventListener('click', () => {
         music.play();
         
-        // १. प्ले बटन लपवणे
         playBtn.classList.add('hidden');
         overlay.style.background = "transparent";
-        
-        // २. टेक्स्टला रीलच्या खाली हलवणे
         msgText.classList.add('text-active');
         
-        // ३. फोटो बॉक्स आणि बॅकग्राउंड इफेक्ट सुरू करणे
         setTimeout(() => {
             box.classList.add('visible');
             box.style.transform = "scale(1)";
@@ -224,7 +222,7 @@
         }, 1500);
     };
 
-    // Particles Logic
+    // Sparkle Particle Effect
     const ctx = canvas.getContext('2d');
     let particles = [];
     function initParticles() {
