@@ -40,7 +40,7 @@ body {
     background: radial-gradient(circle, rgba(255,200,100,0.08), transparent 60%);
 }
 
-/* Box */
+/* Photo box */
 .recorder-box {
     width: 90vw;
     max-width: 260px;
@@ -48,6 +48,8 @@ body {
     overflow: hidden;
     border-radius: 20px;
     position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    border: 2px solid rgba(255,255,255,0.1);
 }
 
 /* Photos */
@@ -70,6 +72,7 @@ body {
 .play-text {
     color: white;
     margin-top: 10px;
+    font-size: 16px;
 }
 
 /* Fade */
@@ -79,7 +82,7 @@ body {
     height: 100%;
     background: black;
     opacity: 0;
-    transition: 2s;
+    transition: opacity 2s;
 }
 
 /* Thank you */
@@ -89,7 +92,7 @@ body {
     font-size: 32px;
     opacity: 0;
     transform: scale(0.5);
-    transition: 1s;
+    transition: all 1s ease;
 }
 .show {
     opacity: 1;
@@ -122,7 +125,7 @@ body {
 
 <script>
 
-// sparkles
+// Sparkles
 for(let i=0;i<40;i++){
     let s=document.createElement('div');
     s.className='sparkle';
@@ -140,18 +143,22 @@ const thankText = document.getElementById('thankText');
 let index = 0;
 let loopTimer = null;
 
-btn.onclick = () => {
+btn.addEventListener("click", () => {
 
-    // reset first
     resetAll();
 
     music.currentTime = 0;
-    music.play().catch(()=>{});
 
-    loopPhotos();
-};
+    music.play().then(()=>{
+        loopPhotos();
+    }).catch(()=>{
+        alert("Tap again to play");
+    });
+});
 
 function loopPhotos(){
+
+    clearTimeout(loopTimer);
 
     const current = photos[index];
 
@@ -159,7 +166,7 @@ function loopPhotos(){
     current.style.transform="translateY(100%)";
 
     setTimeout(()=>{
-        current.style.transition="1s linear";
+        current.style.transition="transform 1s linear";
         current.style.transform="translateY(0%)";
     },50);
 
@@ -167,12 +174,12 @@ function loopPhotos(){
         current.style.transform="translateY(-100%)";
     },1000);
 
-    index = (index+1)%photos.length;
+    index = (index + 1) % photos.length;
 
     loopTimer = setTimeout(loopPhotos,1200);
 }
 
-// song end
+// Song end
 music.onended = () => {
 
     clearTimeout(loopTimer);
@@ -183,13 +190,13 @@ music.onended = () => {
         thankText.classList.add("show");
     },2000);
 
-    // reset after showing
+    // Reset for replay
     setTimeout(()=>{
         resetAll();
     },5000);
 };
 
-// reset function
+// Reset function
 function resetAll(){
 
     clearTimeout(loopTimer);
@@ -203,6 +210,9 @@ function resetAll(){
 
     fadeBlack.style.opacity = "0";
     thankText.classList.remove("show");
+
+    music.pause();
+    music.currentTime = 0;
 }
 </script>
 
