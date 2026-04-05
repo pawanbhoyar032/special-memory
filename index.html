@@ -3,223 +3,212 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Special Memory</title>
+<title>Ultimate Cinematic Memory</title>
 
 <style>
-body{
-    margin:0;
-    background:radial-gradient(circle,#120c08,#000);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    height:100vh;
-    overflow:hidden;
-}
+    body {
+        background: radial-gradient(circle at center, #120c08, #000000);
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        overflow: hidden;
+        font-family: 'Georgia', serif;
+        padding: 10px;
+    }
 
-/* sparkles */
-.sparkle{
-    position:fixed;
-    width:4px;height:4px;
-    background:white;
-    border-radius:50%;
-    animation:blink 2s infinite;
-}
-@keyframes blink{
-    0%,100%{opacity:.2}
-    50%{opacity:1}
-}
+    /* Sparkles */
+    .sparkle {
+        position: fixed;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: white;
+        box-shadow: 0 0 10px white, 0 0 20px gold;
+        animation: sparkleAnim 2s infinite;
+        pointer-events: none;
+    }
 
-/* glow */
-.glow{
-    position:fixed;
-    width:200%;height:200%;
-    background:radial-gradient(circle,rgba(255,200,100,.08),transparent);
-}
+    @keyframes sparkleAnim {
+        0%,100% { opacity: 0.2; transform: scale(0.5); }
+        50% { opacity: 1; transform: scale(1.5); }
+    }
 
-/* box */
-.box{
-    width:260px;
-    aspect-ratio:5/7;
-    overflow:hidden;
-    position:relative;
-    border-radius:20px;
-}
+    /* Glow Background */
+    .glow {
+        position: fixed;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,200,100,0.08), transparent 60%);
+        animation: moveGlow 10s linear infinite;
+        pointer-events: none; /* महत्त्वाचे: बटण क्लिकमध्ये अडथळा येऊ नये म्हणून */
+    }
 
-/* photo */
-.photo{
-    position:absolute;
-    width:100%;
-    height:100%;
-    top:100%;
-}
+    @keyframes moveGlow {
+        0% { transform: translate(-30%, -30%); }
+        50% { transform: translate(-10%, -10%); }
+        100% { transform: translate(-30%, -30%); }
+    }
 
-/* button */
-.play{
-    margin-top:20px;
-    cursor:pointer;
-}
+    /* Photo box 5:7 */
+    .recorder-box {
+        width: 90vw;
+        max-width: 280px;
+        aspect-ratio: 5/7;
+        overflow: hidden;
+        border-radius: 20px;
+        position: relative;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+        background: #000;
+    }
 
-/* text */
-.text{
-    color:#fff;
-    margin-top:10px;
-}
+    /* Vignette effect on top of photos */
+    .recorder-box::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        box-shadow: inset 0 0 80px rgba(0,0,0,0.6);
+        pointer-events: none;
+        z-index: 2;
+    }
 
-/* fade */
-.fade{
-    position:fixed;
-    width:100%;
-    height:100%;
-    background:black;
-    opacity:0;
-    transition:2s;
-}
+    .photo-card {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        transform: translateY(100%); /* सुरुवातीला फोटो खाली असेल */
+        transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), filter 1s ease;
+        z-index: 1;
+    }
 
-/* thank */
-.thank{
-    position:fixed;
-    color:#fff;
-    font-size:30px;
-    opacity:0;
-    transform:scale(.5);
-    transition:1s;
-}
-.show{
-    opacity:1;
-    transform:scale(1);
-}
+    .photo-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .blur { filter: blur(15px); }
+    .clear { filter: blur(0); }
+
+    /* Button */
+    .play-button {
+        width: 70px;
+        height: 70px;
+        margin-top: 30px;
+        cursor: pointer;
+        z-index: 10;
+        transition: transform 0.3s ease;
+    }
+
+    .play-button:active { transform: scale(0.9); }
+
+    .pulse-animation {
+        animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.7); }
+        70% { transform: scale(1.1); box-shadow: 0 0 0 15px rgba(255, 77, 77, 0); }
+        100% { transform: scale(1); }
+    }
+
+    .click-text {
+        color: #fff;
+        margin-top: 15px;
+        font-size: 16px;
+        letter-spacing: 1px;
+        opacity: 0.8;
+    }
+
 </style>
 </head>
-
 <body>
 
 <div class="glow"></div>
 
-<div class="box">
-<div class="photo"><img src="photo1.jpg" width="100%" height="100%"></div>
-<div class="photo"><img src="photo2.jpg" width="100%" height="100%"></div>
-<div class="photo"><img src="photo3.jpg" width="100%" height="100%"></div>
+<div class="recorder-box">
+    <div class="photo-card blur"><img src="photo1.jpg" alt="Memory 1"></div>
+    <div class="photo-card blur"><img src="photo2.jpg" alt="Memory 2"></div>
+    <div class="photo-card blur"><img src="photo3.jpg" alt="Memory 3"></div>
 </div>
 
-<svg class="play" id="btn" width="70" height="70" viewBox="0 0 64 64">
-<circle cx="32" cy="32" r="30" fill="red"/>
-<polygon points="26,20 26,44 46,32" fill="white"/>
+<svg class="play-button pulse-animation" id="playBtn" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="30" fill="#ff4d4d"/>
+    <polygon points="26,20 26,44 46,32" fill="white"/>
 </svg>
 
-<div class="text">I have Surprise 🫠</div>
+<p class="click-text" id="statusText">I have a Surprise ❤️</p>
 
-<div class="fade" id="fade"></div>
-<div class="thank" id="thank">Thank You ❤️</div>
-
-<audio id="music" src="music.mp3"></audio>
+<audio id="bgMusic" src="music.mp3" loop></audio>
 
 <script>
-// sparkles
-for(let i=0;i<40;i++){
- let s=document.createElement('div');
- s.className='sparkle';
- s.style.top=Math.random()*100+'vh';
- s.style.left=Math.random()*100+'vw';
- document.body.appendChild(s);
-}
+    // Sparkles तयार करणे
+    for(let i=0; i<40; i++){
+        let s = document.createElement('div');
+        s.className = 'sparkle';
+        s.style.top = Math.random() * 100 + 'vh';
+        s.style.left = Math.random() * 100 + 'vw';
+        s.style.animationDelay = Math.random() * 2 + 's';
+        document.body.appendChild(s);
+    }
 
-const btn=document.getElementById('btn');
-const music=document.getElementById('music');
-const photos=document.querySelectorAll('.photo');
-const fade=document.getElementById('fade');
-const thank=document.getElementById('thank');
+    const playBtn = document.getElementById('playBtn');
+    const music = document.getElementById('bgMusic');
+    const photos = document.querySelectorAll('.photo-card');
+    const statusText = document.getElementById('statusText');
 
-let i=0;
-let running=false;
-let rafId=null;
-let start=null;
+    let index = 0;
+    let isPlaying = false;
 
-// ▶ PLAY
-btn.onclick=()=>{
+    playBtn.addEventListener('click', function() {
+        if(isPlaying) return;
+        isPlaying = true;
 
- if(running){
-   reset();
- }
+        // बटण लपवणे किंवा अ‍ॅनिमेशन थांबवणे
+        playBtn.classList.remove('pulse-animation');
+        playBtn.style.opacity = '0.5';
+        statusText.innerText = "Our Memories... ✨";
 
- running=true;
- start=null;
+        music.play().catch(e => console.log("Audio play failed:", e));
+        
+        startReel();
+    });
 
- animateLoop();
+    function startReel() {
+        const current = photos[index];
 
- music.currentTime=0;
- music.play().catch(()=>{});
-};
+        // 1. फोटो वर आणणे आणि ब्लर काढणे
+        current.style.transform = 'translateY(0)';
+        current.classList.remove('blur');
+        current.classList.add('clear');
 
-// 🔥 Smooth loop
-function animateLoop(){
+        // 2. झूम इफेक्ट (Heartbeat zoom)
+        let zoomTimer = setInterval(() => {
+            current.style.transform = 'scale(1.08)';
+            setTimeout(() => {
+                current.style.transform = 'scale(1)';
+            }, 400);
+        }, 1000);
 
- function frame(time){
+        // 3. ३.५ सेकंदानंतर पुढचा फोटो दाखवणे
+        setTimeout(() => {
+            clearInterval(zoomTimer);
+            
+            // चालू फोटो बाहेर काढणे (वरच्या दिशेला)
+            current.style.transform = 'translateY(-100%)';
+            current.classList.add('blur');
 
-   if(!running) return;
-
-   if(!start) start=time;
-   let progress=time-start;
-
-   let current=photos[i];
-
-   // reset all photos behind
-   photos.forEach((p,idx)=>{
-     if(idx!==i){
-       p.style.transform="translateY(100%)";
-     }
-   });
-
-   if(progress<1000){
-      current.style.transform=`translateY(${100-progress/10}%)`;
-   }
-   else if(progress<2000){
-      current.style.transform=`translateY(-${(progress-1000)/10}%)`;
-   }
-   else{
-      current.style.transform="translateY(100%)"; // reset current
-      i=(i+1)%photos.length;
-      start=time;
-   }
-
-   rafId=requestAnimationFrame(frame);
- }
-
- rafId=requestAnimationFrame(frame);
-}
-
-// 🎵 END
-music.onended=()=>{
-
- running=false;
- cancelAnimationFrame(rafId);
-
- fade.style.opacity=1;
-
- setTimeout(()=>{
-   thank.classList.add('show');
- },2000);
-};
-
-// 🔁 RESET
-function reset(){
-
- running=false;
- cancelAnimationFrame(rafId);
-
- i=0;
- start=null;
-
- photos.forEach(p=>{
-   p.style.transform="translateY(100%)";
- });
-
- fade.style.opacity=0;
- thank.classList.remove('show');
-
- music.pause();
- music.currentTime=0;
-}
+            index = (index + 1) % photos.length;
+            
+            // पुढचा फोटो सुरू करण्यापूर्वी थोडा गॅप
+            setTimeout(startReel, 500);
+        }, 3500);
+    }
+</script>
 
 </body>
 </html>
