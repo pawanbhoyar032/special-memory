@@ -17,7 +17,7 @@ body {
     min-height: 100vh;
 }
 
-/* Sparkles */
+/* ✨ Sparkles */
 .sparkle {
     position: fixed;
     width: 4px;
@@ -32,7 +32,7 @@ body {
     50% { opacity: 1; }
 }
 
-/* Glow */
+/* 🔥 Glow */
 .glow {
     position: fixed;
     width: 200%;
@@ -40,7 +40,7 @@ body {
     background: radial-gradient(circle, rgba(255,200,100,0.08), transparent 60%);
 }
 
-/* Photo box */
+/* 📸 Photo box */
 .recorder-box {
     width: 90vw;
     max-width: 260px;
@@ -60,7 +60,7 @@ body {
     top: 100%;
 }
 
-/* Button */
+/* ▶ Button */
 .play-button {
     margin-top: 30px;
     width: 70px;
@@ -75,7 +75,7 @@ body {
     font-size: 16px;
 }
 
-/* Fade */
+/* 🌑 Fade */
 .fade-black {
     position: fixed;
     width: 100%;
@@ -85,7 +85,7 @@ body {
     transition: opacity 2s;
 }
 
-/* Thank you */
+/* ❤️ Thank You */
 .thankyou {
     position: fixed;
     color: white;
@@ -125,7 +125,7 @@ body {
 
 <script>
 
-// Sparkles
+// ✨ Sparkles
 for(let i=0;i<40;i++){
     let s=document.createElement('div');
     s.className='sparkle';
@@ -142,17 +142,22 @@ const thankText = document.getElementById('thankText');
 
 let index = 0;
 let loopTimer = null;
+let running = false;
 
 btn.addEventListener("click", () => {
 
+    if(running) return;
+    running = true;
+
     resetAll();
+
+    // 🔥 loop start first (audio wait nahi)
+    loopPhotos();
 
     music.currentTime = 0;
 
-    music.play().then(()=>{
-        loopPhotos();
-    }).catch(()=>{
-        alert("Tap again to play");
+    music.play().catch(()=>{
+        console.log("Audio blocked but visuals running");
     });
 });
 
@@ -179,7 +184,7 @@ function loopPhotos(){
     loopTimer = setTimeout(loopPhotos,1200);
 }
 
-// Song end
+// 🎵 Song end
 music.onended = () => {
 
     clearTimeout(loopTimer);
@@ -190,13 +195,13 @@ music.onended = () => {
         thankText.classList.add("show");
     },2000);
 
-    // Reset for replay
     setTimeout(()=>{
         resetAll();
+        running = false;
     },5000);
 };
 
-// Reset function
+// 🔁 Reset
 function resetAll(){
 
     clearTimeout(loopTimer);
