@@ -8,9 +8,8 @@
 <style>
     :root {
         --bg-color: #000000;
-        --text-color: rgba(255, 255, 255, 0.9);
         --accent-red: #ff4d4d;
-        --nebula-glow: rgba(100, 50, 255, 0.15); /* Deep purple/blue glow */
+        --nebula-glow: rgba(100, 50, 255, 0.12);
     }
 
     body, html {
@@ -24,67 +23,45 @@
         justify-content: center;
         overflow: hidden;
         font-family: 'Georgia', serif;
-        color: var(--text-color);
     }
 
-    /* --- Advanced Cinematic Background Effects --- */
-
-    /* 1. Cinematic Edges (Deep Vignette) */
+    /* Cinematic Edges */
     body::before {
         content: '';
         position: fixed;
         inset: 0;
-        box-shadow: inset 0 0 200px rgba(0,0,0,1), inset 0 0 100px rgba(0,0,0,0.8);
+        box-shadow: inset 0 0 200px rgba(0,0,0,1);
         pointer-events: none;
-        z-index: 30; /* Top layer vignette */
+        z-index: 50;
     }
 
-    /* 2. Moving Nebula Glow (Halos) */
+    /* Background Effects */
     .nebula-bg {
         position: fixed;
         width: 200%;
         height: 200%;
-        background: 
-            radial-gradient(circle at 30% 30%, var(--nebula-glow) 0%, transparent 40%),
-            radial-gradient(circle at 70% 70%, rgba(255, 100, 50, 0.1) 0%, transparent 40%);
-        animation: nebulaMove 20s ease-in-out infinite;
-        opacity: 0; /* Hidden initially */
-        z-index: 2;
-        pointer-events: none;
+        background: radial-gradient(circle at 30% 30%, var(--nebula-glow) 0%, transparent 40%);
+        animation: nebulaMove 20s linear infinite;
+        opacity: 0;
+        z-index: 1;
         transition: opacity 3s ease;
     }
 
     @keyframes nebulaMove {
-        0%, 100% { transform: translate(-25%, -25%) rotate(0deg); }
-        50% { transform: translate(-10%, -10%) rotate(10deg); }
+        0% { transform: translate(-20%, -20%) rotate(0deg); }
+        100% { transform: translate(-10%, -10%) rotate(360deg); }
     }
 
-    /* 3. Horizontal Anamorphic Lens Flare Line */
-    .lens-flare-line {
-        position: fixed;
-        top: 50%;
-        left: -50%;
-        width: 200%;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(100, 200, 255, 0.3), transparent);
-        box-shadow: 0 0 15px rgba(100, 200, 255, 0.2);
-        opacity: 0;
-        z-index: 3;
-        pointer-events: none;
-        transition: opacity 4s ease;
-    }
-
-    /* 4. Sparkle Canvas */
     #canvas {
         position: fixed;
         inset: 0;
-        z-index: 4;
+        z-index: 2;
         pointer-events: none;
         opacity: 0;
         transition: opacity 2s ease;
     }
 
-    /* --- Initial Overlay & Surprise Text --- */
+    /* Initial Overlay */
     #overlay {
         position: fixed;
         inset: 0;
@@ -97,58 +74,62 @@
         transition: background 2s ease;
     }
 
-    /* Surprise Text (Kept visible behind the photo box) */
-    .surprise-text {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: white;
-        font-size: 20px;
-        letter-spacing: 2px;
-        text-align: center;
-        z-index: 10; /* Behind the recorder-box */
-        opacity: 0;
-        transition: opacity 1.5s ease;
-        text-shadow: 0 0 10px rgba(255,255,255,0.5);
+    /* Play Button (No Effect) */
+    #playBtn {
+        width: 80px;
+        height: 80px;
+        cursor: pointer;
+        fill: var(--accent-red);
+        z-index: 101;
+        transition: opacity 0.5s ease;
     }
 
-    /* --- Photo Box & Reel --- */
+    /* Surprise Text Logic */
+    .surprise-text {
+        color: white;
+        font-size: 18px;
+        letter-spacing: 1.5px;
+        text-align: center;
+        z-index: 105;
+        transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-top: 20px; /* सुरुवातीला बटनच्या खाली अंतर */
+        text-shadow: 0 0 10px rgba(255,255,255,0.4);
+    }
+
+    /* जेव्हा प्ले बटन दाबले जाते तेव्हाची पोझिशन */
+    .text-active {
+        position: absolute;
+        top: calc(50% + 230px); /* फोटो रीलच्या खाली सेट केले */
+        margin-top: 0;
+        opacity: 0.9;
+    }
+
+    /* Photo Box */
     .recorder-box {
         width: 85vw;
-        max-width: 300px;
+        max-width: 280px;
         aspect-ratio: 5/7;
         overflow: hidden;
-        border-radius: 10px; /* Sharper, more film-like edges */
+        border-radius: 12px;
         position: relative;
-        z-index: 20; /* Above the surprise text, below vignette */
+        z-index: 40;
         opacity: 0;
-        transform: scale(0.9) translateY(20px);
-        transition: all 2.5s cubic-bezier(0.23, 1, 0.32, 1); /* Cinematic entry */
-        box-shadow: 0 0 60px rgba(0,0,0,1), 0 0 20px rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.03);
+        transform: scale(0.9);
+        transition: all 2s ease;
+        box-shadow: 0 0 50px rgba(0,0,0,1);
+        border: 1px solid rgba(255,255,255,0.05);
     }
 
     .reel {
         display: flex;
         flex-direction: column;
         height: 100%;
-        /* Speed: 9s (Faster, 1.5-2s pause per photo) */
         animation: smoothSlide 9s cubic-bezier(0.45, 0, 0.55, 1) infinite;
         animation-play-state: paused;
     }
 
-    .photo-card {
-        width: 100%;
-        height: 100%;
-        flex-shrink: 0;
-    }
-
-    .photo-card img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+    .photo-card { width: 100%; height: 100%; flex-shrink: 0; }
+    .photo-card img { width: 100%; height: 100%; object-fit: cover; }
 
     @keyframes smoothSlide {
         0%, 28% { transform: translateY(0); }
@@ -157,48 +138,25 @@
         100% { transform: translateY(-300%); }
     }
 
-    /* --- Play Button & State Classes --- */
-    #playBtn {
-        width: 85px;
-        height: 85px;
-        cursor: pointer;
-        fill: var(--accent-red);
-        filter: drop-shadow(0 0 20px rgba(255,77,77,0.7));
-        transition: all 0.5s ease;
-        z-index: 101;
-        animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-        0% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.08); opacity: 0.8; }
-        100% { transform: scale(1); opacity: 1; }
-    }
-
     /* End Message */
     #thankYou {
         position: fixed;
         color: white;
-        font-size: 28px;
-        letter-spacing: 3px;
+        font-size: 26px;
         opacity: 0;
-        z-index: 102; /* Top layer */
-        transition: opacity 2.5s ease;
+        z-index: 200;
+        transition: opacity 2s ease;
         text-align: center;
-        text-shadow: 0 0 15px rgba(255,255,255,0.6);
     }
 
-    /* Utility Classes to control visibility */
     .visible { opacity: 1 !important; }
-    .hidden { opacity: 0 !important; pointer-events: none; transition: opacity 1s ease; }
-    .running { animation-play-state: running !important; }
+    .hidden { opacity: 0 !important; pointer-events: none; }
 
 </style>
 </head>
 <body>
 
     <div class="nebula-bg" id="nebula"></div>
-    <div class="lens-flare-line" id="flare"></div>
     <canvas id="canvas"></canvas>
 
     <div id="overlay">
@@ -206,21 +164,19 @@
             <circle cx="32" cy="32" r="30" />
             <polygon points="26,20 26,44 46,32" fill="white"/>
         </svg>
+        <p class="surprise-text" id="msgText">I have a Surprise ❤️</p>
     </div>
-
-    <p class="surprise-text" id="msgText">I have a Surprise ❤️</p>
 
     <div class="recorder-box" id="box">
         <div class="reel" id="reel">
-            <div class="photo-card"><img src="photo1.jpg" alt="Memory 1"></div>
-            <div class="photo-card"><img src="photo2.jpg" alt="Memory 2"></div>
-            <div class="photo-card"><img src="photo3.jpg" alt="Memory 3"></div>
-            <div class="photo-card"><img src="photo1.jpg" alt="Loop Constant"></div>
+            <div class="photo-card"><img src="photo1.jpg"></div>
+            <div class="photo-card"><img src="photo2.jpg"></div>
+            <div class="photo-card"><img src="photo3.jpg"></div>
+            <div class="photo-card"><img src="photo1.jpg"></div>
         </div>
     </div>
 
     <div id="thankYou">Thank You 🐣</div>
-
     <audio id="bgMusic" src="music.mp3"></audio>
 
 <script>
@@ -233,88 +189,65 @@
     const thankYou = document.getElementById('thankYou');
     const canvas = document.getElementById('canvas');
     const nebula = document.getElementById('nebula');
-    const flare = document.getElementById('flare');
 
     playBtn.addEventListener('click', () => {
-        music.play().catch(e => console.log("Audio requires interaction first."));
+        music.play();
         
-        // 1. Hide only the Play Button, remove black background
+        // १. प्ले बटन लपवणे
         playBtn.classList.add('hidden');
         overlay.style.background = "transparent";
-        overlay.style.pointerEvents = "none"; // Allow clicks to pass through overlay
         
-        // 2. Show the Surprise Text (Stationary in the background)
-        msgText.classList.add('visible');
+        // २. टेक्स्टला रीलच्या खाली हलवणे
+        msgText.classList.add('text-active');
         
-        // 3. Cinematic entry of the Photo Box (delayed slightly for effect)
+        // ३. फोटो बॉक्स आणि बॅकग्राउंड इफेक्ट सुरू करणे
         setTimeout(() => {
             box.classList.add('visible');
-            box.style.transform = "scale(1) translateY(0)";
-            
-            // 4. Show Cinematic Background Effects
+            box.style.transform = "scale(1)";
             nebula.classList.add('visible');
-            flare.classList.add('visible');
             canvas.classList.add('visible');
-            
-            // 5. Start Reel Animation
-            reel.classList.add('running');
-            
-            initParticles(); // Start Sparkles
-        }, 800);
+            reel.style.animationPlayState = 'running';
+            initParticles();
+        }, 500);
     });
 
-    // When music ends:
     music.onended = function() {
-        // Fade everything out to black
         overlay.style.background = "black";
         overlay.classList.remove('hidden');
-        overlay.style.pointerEvents = "auto";
-        
         box.classList.remove('visible');
+        msgText.classList.remove('visible');
         nebula.classList.remove('visible');
-        flare.classList.remove('visible');
         canvas.classList.remove('visible');
-        msgText.classList.remove('visible'); // Surprise text also fades out now
         
-        // Show Final Message
         setTimeout(() => {
             thankYou.classList.add('visible');
         }, 1500);
     };
 
-    // --- Sparkle Canvas Logic ---
+    // Particles Logic
     const ctx = canvas.getContext('2d');
     let particles = [];
-
     function initParticles() {
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-        window.dispatchEvent(new Event('resize')); // Set initial size
-
-        for(let i=0; i<70; i++) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        for(let i=0; i<60; i++) {
             particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                size: Math.random() * 1.8 + 0.3,
-                speed: Math.random() * 0.3 + 0.05,
-                opacity: Math.random() * 0.8
+                x: Math.random()*canvas.width,
+                y: Math.random()*canvas.height,
+                size: Math.random()*1.5+0.5,
+                speed: Math.random()*0.3+0.1,
+                opacity: Math.random()
             });
         }
         animate();
     }
-
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         particles.forEach(p => {
             p.y -= p.speed;
             if(p.y < 0) p.y = canvas.height;
             ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
         });
         requestAnimationFrame(animate);
     }
