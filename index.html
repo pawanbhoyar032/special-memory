@@ -17,7 +17,7 @@ body {
     overflow:hidden;
 }
 
-/* Sparkle */
+/* ✨ Sparkle */
 .sparkle{
     position:fixed;
     width:4px;height:4px;
@@ -30,14 +30,14 @@ body {
     50%{opacity:1}
 }
 
-/* Glow */
+/* 🔥 Glow */
 .glow{
     position:fixed;
     width:200%;height:200%;
     background:radial-gradient(circle,rgba(255,200,100,.08),transparent);
 }
 
-/* Box */
+/* 📸 Box */
 .box{
     width:260px;
     aspect-ratio:5/7;
@@ -54,7 +54,7 @@ body {
     top:100%;
 }
 
-/* Button */
+/* ▶ Button */
 .play{
     margin-top:20px;
     cursor:pointer;
@@ -66,7 +66,7 @@ body {
     margin-top:10px;
 }
 
-/* Fade */
+/* 🌑 Fade */
 .fade{
     position:fixed;
     width:100%;
@@ -76,7 +76,7 @@ body {
     transition:2s;
 }
 
-/* Thank */
+/* ❤️ Thank */
 .thank{
     position:fixed;
     color:#fff;
@@ -116,7 +116,7 @@ body {
 
 <script>
 
-// sparkles
+// ✨ sparkles
 for(let i=0;i<40;i++){
  let s=document.createElement('div');
  s.className='sparkle';
@@ -135,14 +135,16 @@ let i=0;
 let interval=null;
 let running=false;
 
+// ▶ BUTTON CLICK
 btn.onclick=()=>{
 
- if(running) return;
+ // 🔁 Replay support
+ if(running){
+   reset();
+ }
+
  running=true;
 
- reset();
-
- // start loop instantly
  interval=setInterval(()=>{
    animate();
  },1200);
@@ -151,6 +153,7 @@ btn.onclick=()=>{
  music.play().catch(()=>{});
 };
 
+// 📸 Animation
 function animate(){
 
  const p=photos[i];
@@ -170,7 +173,7 @@ function animate(){
  i=(i+1)%photos.length;
 }
 
-// end
+// 🎵 Song end
 music.onended=()=>{
 
  clearInterval(interval);
@@ -180,13 +183,9 @@ music.onended=()=>{
  setTimeout(()=>{
    thank.classList.add('show');
  },2000);
-
- setTimeout(()=>{
-   reset();
-   running=false;
- },5000);
 };
 
+// 🔁 Reset (manual)
 function reset(){
 
  clearInterval(interval);
@@ -204,7 +203,6 @@ function reset(){
  music.pause();
  music.currentTime=0;
 }
-
 </script>
 
 </body>
